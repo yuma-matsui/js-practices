@@ -3,6 +3,12 @@ export class FetchHtml {
     this.url = url
   }
 
+  addEvent (event, targetEl) {
+    targetEl.addEventListener(event, () => {
+      this.printHtml()
+    })
+  }
+
   get HTMLPromise () {
     return fetch(this.url)
   }

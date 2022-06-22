@@ -10,11 +10,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const fetchHtml = new FetchHtml(url)
   const asyncFetchHtml = new AsyncFetchHtml(url)
 
-  btnPromise.addEventListener('click', () => {
-    fetchHtml.printHtml()
-  })
-
-  btnAsync.addEventListener('click', () => {
-    asyncFetchHtml.printHtml()
-  })
+  fetchHtml.addEvent('click', btnPromise)
+  asyncFetchHtml.addEvent('click', btnAsync)
 })
