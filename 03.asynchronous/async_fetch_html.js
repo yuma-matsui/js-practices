@@ -1,7 +1,7 @@
 import { FetchHtml } from './fetch_html.js'
 
 export class AsyncFetchHtml extends FetchHtml {
-  async printHTML () {
+  async printHtml () {
     try {
       const response = await fetch(this.url)
       const html = await response.text()
