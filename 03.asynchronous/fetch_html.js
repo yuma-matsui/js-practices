@@ -1,14 +1,6 @@
 export class FetchHtml {
-  constructor (url, targetEl) {
+  constructor (url) {
     this.url = url
-    this.targetEl = targetEl
-    this.addEvent('click')
-  }
-
-  addEvent (event) {
-    this.targetEl.addEventListener(event, () => {
-      this.printHtml()
-    })
   }
 
   get HTMLPromise () {
