@@ -20,6 +20,7 @@ module.exports = class CalendarOptions {
       }
     } catch (error) {
       console.log(error.message)
+      process.exit(1)
     }
   }
 
