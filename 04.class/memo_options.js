@@ -5,11 +5,15 @@ module.exports = class MemoOptions {
     delete this.#args._
   }
 
-  get all () {
-    return this.#args
+  get size () {
+    return Object.keys(this.#args).length
   }
 
   get exist () {
     return Object.keys(this.#args).length !== 0
+  }
+
+  include (option) {
+    return (this.size === 1) && this.#args[option]
   }
 }
