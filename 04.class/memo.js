@@ -2,6 +2,7 @@ module.exports = class Memo {
   static readline = require('readline')
   static Options = require('./memo_options')
   static DB = require('./memo_db')
+  static Select = require('enquirer').Select
 
   static crud () {
     const memo = new this()
@@ -17,17 +18,17 @@ module.exports = class Memo {
 
   crud () {
     if (!this.#options.exist) {
-      this.create()
+      this.#create()
     } else if (this.#options.include('l')) {
-      this.printAll()
+      this.#printAll()
     } else if (this.#options.include('r')) {
-      this.read()
+      this.#read()
     } else if (this.#options.include('d')) {
       this.delete()
     }
   }
 
-  async create () {
+  async #create () {
     const memo = await this.#readMemo()
     const data = { memo }
     this.#db.insert(data)
@@ -44,7 +45,7 @@ module.exports = class Memo {
     })
   }
 
-  async printAll () {
+  async #printAll () {
     try {
       const memos = await this.#db.all()
       memos.forEach(memo => console.log(memo.memo.split('\n')[0]))
@@ -54,8 +55,27 @@ module.exports = class Memo {
     }
   }
 
-  read () {
-    console.log('read')
+  async #read () {
+    try {
+      const memos = await this.#db.all()
+      const firstLines = memos.map(memo => memo.memo.split('\n')[0])
+      const answer = await this.#selectMemo(firstLines.concat())
+      const index = firstLines.indexOf(answer)
+      console.log(memos[index].memo)
+    } catch (error) {
+      console.log(error)
+      process.exit(1)
+    }
+  }
+
+  async #selectMemo (choices) {
+    const prompt = new Memo.Select({
+      name: 'memo',
+      message: 'Choose a note you want to see',
+      choices
+    })
+
+    return await prompt.run()
   }
 
   delete () {
