@@ -19,7 +19,7 @@ module.exports = class Memo {
     if (!this.#options.exist) {
       this.create()
     } else if (this.#options.include('l')) {
-      this.all()
+      this.printAll()
     } else if (this.#options.include('r')) {
       this.read()
     } else if (this.#options.include('d')) {
@@ -42,5 +42,23 @@ module.exports = class Memo {
       rl.on('line', line => lines.push(line))
       rl.on('close', () => resolve(lines.join('\n')))
     })
+  }
+
+  async printAll () {
+    try {
+      const memos = await this.#db.all()
+      memos.forEach(memo => console.log(memo.memo.split('\n')[0]))
+    } catch (error) {
+      console.log(error)
+      process.exit(1)
+    }
+  }
+
+  read () {
+    console.log('read')
+  }
+
+  delete () {
+    console.log('delete')
   }
 }
