@@ -1,3 +1,4 @@
+const Options = require('./calendar_options')
 module.exports = class Calendar {
   // 日にち出力時の整形用
   static pad_num = 4
@@ -13,7 +14,7 @@ module.exports = class Calendar {
   #targetCalendar
 
   static print () {
-    const calendar = new this(new Calendar.Options().yearAndMonth)
+    const calendar = new this(new Options().yearAndMonth)
     calendar.print()
   }
 
@@ -64,7 +65,7 @@ module.exports = class Calendar {
       process.stdout.write(this.#today_or_another_day(day))
 
       // 日にちが土曜日の場合に改行
-      if (day.getDay() === 6) console.log()
+      if ((day.getDay() === 6) || (day.getDate() === this.lastDate)) console.log()
     })
   }
 
