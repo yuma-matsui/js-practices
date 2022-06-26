@@ -24,14 +24,21 @@ module.exports = class Memo {
     } else if (this.#options.include('r')) {
       this.#read()
     } else if (this.#options.include('d')) {
-      this.delete()
+      this.#delete()
     }
   }
 
   async #create () {
-    const memo = await this.#readMemo()
-    const data = { memo }
-    this.#db.insert(data)
+    try {
+      const memo = await this.#readMemo()
+      const data = { memo }
+      this.#db.insert(data)
+    } catch (error) {
+      console.log(error)
+      process.exit(1)
+    } finally {
+      this.#db.close()
+    }
   }
 
   async #readMemo () {
@@ -52,33 +59,50 @@ module.exports = class Memo {
     } catch (error) {
       console.log(error)
       process.exit(1)
+    } finally {
+      this.#db.close()
     }
   }
 
   async #read () {
     try {
       const memos = await this.#db.all()
-      const firstLines = memos.map(memo => memo.memo.split('\n')[0])
-      const answer = await this.#selectMemo(firstLines.concat())
-      const index = firstLines.indexOf(answer)
-      console.log(memos[index].memo)
+      const target = await this.#identifyMemo(memos, 'see')
+      console.log(memos[target].memo)
     } catch (error) {
       console.log(error)
       process.exit(1)
+    } finally {
+      this.#db.close()
     }
   }
 
-  async #selectMemo (choices) {
+  async #selectMemo (choices, action) {
     const prompt = new Memo.Select({
       name: 'memo',
-      message: 'Choose a note you want to see',
+      message: `Choose a note you want to ${action}`,
       choices
     })
 
     return await prompt.run()
   }
 
-  delete () {
-    console.log('delete')
+  async #delete () {
+    try {
+      const memos = await this.#db.all()
+      const target = await this.#identifyMemo(memos, 'delete')
+      this.#db.delete(memos[target])
+    } catch (error) {
+      console.log(error)
+      process.exit(1)
+    } finally {
+      this.#db.close()
+    }
+  }
+
+  async #identifyMemo (memos, action) {
+    const firstLines = memos.map(memo => memo.memo.split('\n')[0])
+    const targetMemo = await this.#selectMemo(firstLines.concat(), action)
+    return firstLines.indexOf(targetMemo)
   }
 }
