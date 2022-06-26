@@ -10,7 +10,7 @@ module.exports = class MemoOptions {
   }
 
   get exist () {
-    return Object.keys(this.#args).length !== 0
+    return this.size !== 0
   }
 
   include (option) {
