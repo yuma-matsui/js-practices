@@ -3,7 +3,7 @@ module.exports = class MemoDB {
   static sqlite3 = require('sqlite3').verbose()
   static createTableStatement = 'CREATE TABLE if not exists Memo (id INTEGER PRIMARY KEY AUTOINCREMENT, memo TEXT)'
   static insertStatement = 'INSERT INTO Memo (memo) VALUES (?)'
-  static allStatement = 'SELECT * FROM Memo'
+  static selectAllStatement = 'SELECT * FROM Memo'
 
   #db
   constructor () {
@@ -11,17 +11,17 @@ module.exports = class MemoDB {
     this.#createTable(MemoDB.createTableStatement)
   }
 
-  #serialize (method) {
-    this.#db.serialize(() => {
-      method()
-    })
-  }
-
   #createTable (createTableStatement) {
     const method = () => {
       this.#db.run(createTableStatement)
     }
     this.#serialize(method)
+  }
+
+  #serialize (method) {
+    this.#db.serialize(() => {
+      method()
+    })
   }
 
   insert ({ memo }) {
@@ -33,16 +33,18 @@ module.exports = class MemoDB {
     this.#executeSql(method)
   }
 
-  all () {
-    const method = () => {
-      this.#db.each('SELECT * FROM Memo', (error, result) => {
-        if (error) {
-          throw Error
-        }
-        console.log(result.id, result.memo)
-      })
-    }
-    this.#executeSql(method)
+  async all () {
+    return new Promise(resolve => {
+      const method = () => {
+        this.#db.all(MemoDB.selectAllStatement, (error, memos) => {
+          if (error) {
+            throw Error(error)
+          }
+          resolve(memos)
+        })
+      }
+      this.#executeSql(method)
+    })
   }
 
   #executeSql (method) {
