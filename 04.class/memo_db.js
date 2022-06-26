@@ -4,11 +4,16 @@ module.exports = class MemoDB {
   static createTableStatement = 'CREATE TABLE if not exists Memo (id INTEGER PRIMARY KEY AUTOINCREMENT, memo TEXT)'
   static insertStatement = 'INSERT INTO Memo (memo) VALUES (?)'
   static selectAllStatement = 'SELECT * FROM Memo'
+  static deleteStatement = 'DELETE FROM Memo WHERE id = (?)'
 
   #db
   constructor () {
     this.#db = new MemoDB.sqlite3.Database(MemoDB.storage)
     this.#createTable(MemoDB.createTableStatement)
+  }
+
+  close () {
+    this.#db.close()
   }
 
   #createTable (createTableStatement) {
@@ -30,7 +35,7 @@ module.exports = class MemoDB {
       statement.run(memo)
       statement.finalize()
     }
-    this.#executeSql(method)
+    this.#serialize(method)
   }
 
   async all () {
@@ -43,12 +48,16 @@ module.exports = class MemoDB {
           resolve(memos)
         })
       }
-      this.#executeSql(method)
+      this.#serialize(method)
     })
   }
 
-  #executeSql (method) {
+  delete ({ id }) {
+    const method = () => {
+      const statement = this.#db.prepare(MemoDB.deleteStatement)
+      statement.run(id)
+      statement.finalize()
+    }
     this.#serialize(method)
-    this.#db.close()
   }
 }
