@@ -1,9 +1,8 @@
+const readline = require('readline')
+const MemoOptions = require('./memo_options')
+const MemoDB = require('./memo_db')
+const { Select } = require('enquirer')
 module.exports = class Memo {
-  static readline = require('readline')
-  static Options = require('./memo_options')
-  static DB = require('./memo_db')
-  static Select = require('enquirer').Select
-
   static crud () {
     const memo = new this()
     memo.crud()
@@ -12,8 +11,8 @@ module.exports = class Memo {
   #options
   #db
   constructor () {
-    this.#options = new Memo.Options()
-    this.#db = new Memo.DB()
+    this.#options = new MemoOptions()
+    this.#db = new MemoDB()
   }
 
   crud () {
@@ -44,7 +43,7 @@ module.exports = class Memo {
   async #readMemo () {
     const lines = []
     return new Promise(resolve => {
-      const rl = Memo.readline.createInterface({
+      const rl = readline.createInterface({
         input: process.stdin
       })
       rl.on('line', line => lines.push(line))
@@ -78,7 +77,7 @@ module.exports = class Memo {
   }
 
   async #selectMemo (choices, action) {
-    const prompt = new Memo.Select({
+    const prompt = new Select({
       name: 'memo',
       message: `Choose a note you want to ${action}`,
       choices
