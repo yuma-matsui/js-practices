@@ -1,18 +1,16 @@
 const readline = require('readline')
-const MemoOptions = require('./memo_options')
-const MemoDB = require('./memo_db')
 const { Select } = require('enquirer')
-module.exports = class Memo {
-  static crud () {
-    const memo = new this()
+module.exports = class MemoApp {
+  static crud (options, db) {
+    const memo = new this(options, db)
     memo.crud()
   }
 
   #options
   #db
-  constructor () {
-    this.#options = new MemoOptions()
-    this.#db = new MemoDB()
+  constructor (options, db) {
+    this.#options = options
+    this.#db = db
   }
 
   crud () {
