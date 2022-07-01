@@ -1,3 +1,5 @@
-const Memo = require('./memo')
+const MemoApp = require('./memo_app')
+const MemoOptions = require('./memo_options')
+const MemoDB = require('./memo_db')
 
-Memo.crud()
+MemoApp.crud(new MemoOptions(), new MemoDB())
