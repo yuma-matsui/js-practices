@@ -1,5 +1,9 @@
 module.exports = class CalendarOptions {
-  #args = require('minimist')(process.argv.slice(2))
+  #args
+  constructor (args) {
+    this.#args = args
+    delete this.#args._
+  }
 
   get year () {
     return this.#args.y || new Date().getFullYear()
