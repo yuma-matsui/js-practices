@@ -1,11 +1,10 @@
 const Options = require('./calendar_options')
+const args = require('minimist')(process.argv.slice(2))
 module.exports = class Calendar {
   // 日にち出力時の整形用
   static pad_num = 4
 
   static week = ['日', '月', '火', '水', '木', '金', '土']
-
-  static Options = require('./calendar_options')
 
   // 出力文字色反転用
   static colorReverse = '\x1b[7m'
@@ -14,7 +13,7 @@ module.exports = class Calendar {
   #targetCalendar
 
   static print () {
-    const calendar = new this(new Options().yearAndMonth)
+    const calendar = new this(new Options(args).yearAndMonth)
     calendar.print()
   }
 
