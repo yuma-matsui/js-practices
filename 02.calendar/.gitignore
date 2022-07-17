@@ -1,4 +1,5 @@
 node_modules/
 tsconfig.json/
-.eslintrc.json/
+tsconfig.eslint.json
+.eslintrc.js/
 dist/
