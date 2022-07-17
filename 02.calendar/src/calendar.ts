@@ -1,5 +1,6 @@
 import { CalendarOptions } from './calendar_options.js'
 import { YearAndMonth } from './interface.js'
+import { OptionParser } from './option_parser.js'
 
 export class Calendar {
   // 日にち出力時の整形用
@@ -14,7 +15,7 @@ export class Calendar {
   readonly #targetCalendar
 
   static print () {
-    const calendar = new this(new CalendarOptions().yearAndMonth)
+    const calendar = new this(new CalendarOptions(new OptionParser().options).yearAndMonth)
     calendar.print()
   }
 

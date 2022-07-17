@@ -1,14 +1,9 @@
-import { program } from 'commander'
 import { CliOptions, YearAndMonth } from './interface.js'
 
 export class CalendarOptions {
   readonly #args: CliOptions
-  constructor () {
-    program
-      .option('-y, --y <integer>')
-      .option('-m, --m <integer>')
-      .parse(process.argv)
-    this.#args = program.opts()
+  constructor (args: CliOptions) {
+    this.#args = args
   }
 
   #isInvalidYear (year: number): boolean {
