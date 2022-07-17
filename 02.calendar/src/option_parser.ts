@@ -12,6 +12,9 @@ export class OptionParser {
   }
 
   get options (): CliOptions {
-    return this.#args
+    return {
+      y: this.#args.y || '',
+      m: this.#args.m || ''
+    }
   }
 }

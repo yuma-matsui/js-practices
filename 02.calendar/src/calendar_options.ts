@@ -11,7 +11,7 @@ export class CalendarOptions {
   }
 
   get year () {
-    if (!this.#args.y) return new Date().getFullYear()
+    if (this.#args.y === '') return new Date().getFullYear()
     const year = Number(this.#args.y)
 
     try {
@@ -33,7 +33,7 @@ export class CalendarOptions {
 
   // 0..11を返す
   get month () {
-    if (!this.#args.m) return new Date().getMonth()
+    if (this.#args.m === '') return new Date().getMonth()
 
     const month = Number(this.#args.m)
     try {
